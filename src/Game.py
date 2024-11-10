@@ -2,13 +2,16 @@ import pygame
 
 from random import randint
 
+from pytmx.util_pygame import load_pygame
+
 from settings import (
     WINDOW_HEIGHT,
-    WINDOW_WIDTH
+    WINDOW_WIDTH,
+    TILE_SIZE
 )
 
 from Player import Player
-from CollisionSprite import CollisionSprite
+from CollisionSprite import Sprite, CollisionSprite
 
 
 class Game:
@@ -24,13 +27,30 @@ class Game:
         # groups
         self.all_sprites = pygame.sprite.Group()
         self.collision_sprites = pygame.sprite.Group()
+
+        self.setup()
+
         # sprites
         self.player = Player(self.all_sprites, self.collision_sprites)
-        for i in range(6):
-            x, y = randint(0, WINDOW_WIDTH), randint(0, WINDOW_HEIGHT)
-            w, h = randint(60, 100), randint(50, 100)
+
+    def setup(self):
+        map = load_pygame('./assets/data/maps/world.tmx')
+        for obj in map.get_layer_by_name('Collisions'):
             CollisionSprite(
-                (x, y), (w, h), (self.all_sprites, self.collision_sprites)
+                (obj.x, obj.y),
+                pygame.Surface(
+                    (obj.width, obj.height)),
+                (self.all_sprites, self.collision_sprites)
+            )
+
+        for x, y, image in map.get_layer_by_name('Ground').tiles():
+            Sprite(
+                (x * TILE_SIZE, y * TILE_SIZE), image, self.all_sprites
+            )
+
+        for obj in map.get_layer_by_name('Objects'):
+            CollisionSprite(
+                (obj.x, obj.y), obj.image, (self.all_sprites, self.collision_sprites)
             )
 
     def run(self):

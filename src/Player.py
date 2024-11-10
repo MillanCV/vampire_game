@@ -33,7 +33,6 @@ class Player(pygame.sprite.Sprite):
         self.direction = self.direction.normalize() if self.direction else self.direction
 
     def move(self, dt):
-        print(self.direction)
         self.hitbox_rect.x += (self.direction.x * self.speed * dt)
         self.collision('horizontal')
         self.hitbox_rect.y += (self.direction.y * self.speed * dt)
