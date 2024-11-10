@@ -7,7 +7,7 @@ from settings import (
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, group, collision_sprites):
+    def __init__(self, pos, group, collision_sprites):
         super().__init__(group)
         self.IMAGES = {
             "down": [pygame.image.load(f'assets/images/player/down/{i}.png').convert_alpha() for i in range(4)],
@@ -19,8 +19,8 @@ class Player(pygame.sprite.Sprite):
         self.frame_index = 0
         self.image = self.IMAGES["down"][0]
         self.rect = self.IMAGES["down"][0].get_frect(
-            center=(WINDOW_WIDTH // 2, WINDOW_HEIGHT // 2))
-        self.hitbox_rect = self.rect.inflate(-40, 0)
+            center=pos)
+        self.hitbox_rect = self.rect.inflate(-40, -30)
 
         self.direction = pygame.math.Vector2(0, 0)
         self.speed = 300
